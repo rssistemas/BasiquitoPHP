@@ -1,0 +1,2 @@
+# globalAdm
+Sistema Administrativo 

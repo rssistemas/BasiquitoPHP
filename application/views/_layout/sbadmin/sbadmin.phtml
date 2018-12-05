@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SB Admin - Bootstrap Admin Template</title>
+
+    <!-- Bootstrap Core CSS -->
+    <?php Tag::css('sbadmin/bootstrap.min'); ?>
+
+    <!-- Custom CSS -->
+    <?php Tag::css('sbadmin/sb-admin'); ?>
+
+    <!-- Morris Charts CSS -->
+    <?php Tag::css('sbadmin/plugins/morris'); ?>
+    
+    <!-- Custom Fonts -->
+    <?php Tag::css('sbadmin/font-awesome/css/font-awesome.min'); ?>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <?php echo Html::includeCss(); ?>
+    
+     <!-- jQuery -->
+    <?php echo Tag::js('sbadmin/jquery'); ?>
+    <!-- Bootstrap Core JavaScript -->
+    <?php echo Tag::js('sbadmin/bootstrap.min'); ?>
+    
+    
+
+</head>
+<body>
+
+    <div id="wrapper">
+        <?php View::partial('sbadmin/menu'); ?>
+        
+        <div id="page-wrapper">
+            <?php View::partial('sbadmin/cabecera'); ?>
+            <?php View::content(); ?>
+        </div>
+    </div>
+</body>
+
+</html>

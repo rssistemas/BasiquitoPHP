@@ -1,0 +1,37 @@
+.p-codigo, .p-tipo_producto {
+    	color: white;
+    	border-radius: 2px;
+    	padding: 0.2em;
+    }
+    .ui-autocomplete .p-codigo {
+        float: left;
+        font-size: smaller;
+        background: #16a765;
+    }
+    .ui-autocomplete .p-nombre {
+        margin-left: 0.5em;
+    }
+    .ui-autocomplete .p-tipo_producto {
+        margin-left: 0.5em;
+        float: right;
+        font-size: smaller;
+        background: #428bca;
+    }
+    .ui-title{
+        background-color:#ccc;
+        height: 2em;
+        font-size: smaller;
+        font-weight: bold;
+        border-radius: 2px;
+        padding-top: 0.4em;
+    }
+    .ui-title .h-codigo{
+        padding-left: 0.7em; 
+    }
+    .ui-title .h-nombre {
+    	margin-left: 1em;
+    }
+    .ui-title .h-tipo_producto {
+    	margin-right: 0.6em;
+        float: right;
+    }
