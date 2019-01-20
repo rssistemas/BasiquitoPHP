@@ -33,11 +33,8 @@
 
             $registry = registry::getInstancia();
             $registry ->_request = new request();
-            $registry ->_db = new database();
-            $registry ->_guachiman = new guachiman();
+            
             $registry ->_acl = new acl();
-            //$registry ->_error = new error();        
-
 
             bootstrap ::start($registry->_request);
 
