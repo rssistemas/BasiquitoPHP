@@ -24,6 +24,8 @@ abstract class controller
         //-----------------------------------------
         protected function loadModel($modelo,$modulo=false)
         {
+                $_nmodelo = $modelo;
+            
                 $modelo = $modelo.'Model';
                 $ruta_modelo = APP_PATH . 'models' . DS . $modelo . '.php';// creamos la ruta del modelo
 
@@ -45,9 +47,14 @@ abstract class controller
                 {
 
                         require_once $ruta_modelo;// requerimos el archivo
-
-                        $modelo = new $modelo;// instanciamos la clase contenida en el archivo
-
+                        //----------------------------------------------------------------------------------------------------------
+                        //$modelo = new $modelo;// instanciamos la clase contenida en el archivo
+                        //Autor: Rafel Perez
+                        // 30/01/2019 
+                        //----------------------------------------------------------------------------------------------------
+                        //change that allows the name of the model to pass to the class
+                          $modelo = new $modelo($_nmodelo);
+                          
                         return $modelo;// retornamos el objeto intanciado
 
                 }else 

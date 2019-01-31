@@ -1,27 +1,53 @@
 <?php
-// clase modelo utilizada para crear los modelos de datos   
+// Autor: Rafae Perez
+// comment: class data model that provides functionality for operations with Mysql databases 
+
 class model
 {
-        private $_name; 
         private $_registry;	
         protected $_db;
-
-        private $_select;
-        private $_where;
         private $_table;
+        private $_fields;       
+        
+        private $_where;
         private $_opt;
         
-        public function __construct($name)
+        public function __construct($name )
         {
-            $this->_name = $name; 
+            $this->setTable( $name); 
             $this->_registry = registry::getInstancia();
-            $this->_db = $this->_registry->_db;			
+            $this->_db = $this->_registry->_db;	
+            
+            //mapping of fields
+            $this->mapFields();
+            
+        }
+        //-------------------------------------------------------------------------------------------------------------------------------------------------------
+        //Autor:Rafael Perez
+        //Comment: method that maps data structure
+        private function mapFields()
+        {        
+                $sql = "select * from ".$this->_table." limit 1";
+                $res = $this->_db->query($sql);
+                if($res)
+                {    
+                    $res->setFetchMode(PDO::FETCH_ASSOC);       
+                   $data = $res->fetch();
+                   $fields = array_keys($data);                   
+                    $this->setFields( $fields);
+                    return true;
+                }else
+                {
+                    $this->regLog();
+                    return false;
+                }
+     
+                        
         }
         
-        
-        public function setSelect($value)
+        public function setFields($value)
         {
-            $this->_select = $value;
+            $this->_fields = $value;
         }
         public function setWhere($value)
         {
@@ -35,6 +61,9 @@ class model
         {
             $this->_opt = $value;
         }
+        
+        
+        
         
       //Method that generates query to database  
         public function sQuerySelect()
@@ -75,19 +104,19 @@ class model
             
             if($oper == 1)
             {
-                 $sql = "select " . $this->_select .
+                 $sql = "select " . $this->_fields .
                             "  from " . $this->_table ;
             }    
            if($oper == 2)         
            {
-                 $sql = "select  " . $this->_select .
+                 $sql = "select  " . $this->_fields .
                             "  from " . $this->_table .
                             " where " . $this->_where;               
            }         
            
            if($oper == 3)
            {
-                $sql = "select  " . $this->_select .
+                $sql = "select  " . $this->_fields .
                             "  from " . $this->_table .
                             " where " . $this->_where.
                             " " . $this->_opt;   
@@ -107,8 +136,19 @@ class model
                  
             
         }
-        
-        
+           
+        public function sQueryInsert()
+        {
+                if(count($this->_fields)>0)
+                {
+                    
+                    
+                    
+                }   
+            
+            
+            
+        }
         
         // Method that starts transaction in MYSQL  
         public function start()
