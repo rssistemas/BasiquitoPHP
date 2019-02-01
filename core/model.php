@@ -137,12 +137,46 @@ class model
             
         }
            
-        public function sQueryInsert()
+        
+         //-------------------------------------------------------------------------------------------------------------------------------------------------------
+        //Autor:Rafael Perez
+        //Comment: method that generates insertion query
+        //parameters: array(":index"->value,........) or array("index"->value)
+        public function sQueryInsert(array $values)
         {
                 if(count($this->_fields)>0)
                 {
+                    if(count($values) != count($this->_fields) ) 
+                    {
+                            $fields = array();
+                            foreach($values as $k => $v )
+                            {
+                               if(strpos(":", $v)) 
+                                    $index = str_replace(":","",$k);
+                               else
+                                   $index = $k;
+                                    $fields[] = $index;
+                            }
+                            $prep = $values;
+                            $this->_db->prepare("INSERT INTO ".$this->_table."( " . implode(', ',$fields) . ") VALUES (" . implode(', ',array_keys($prep)) . ")");
+                    }else
+                    {
+                            $prep = array();
+                            foreach($values as $k => $v )
+                            {
+                                $prep[':'.$k] = $v;
+                            }
+                            $this->_db->prepare("INSERT INTO ".$this->_table."( " . implode(', ',array_keys($this->_fields)) . ") VALUES (" . implode(', ',array_keys($prep)) . ")");
+                    }                   
                     
-                    
+                    $res = $sth->execute($prep);
+                    if(!$res)
+                    {
+                        $this->regLog();
+                        return FALSE;
+                    } else {
+                            return true;
+                    }
                     
                 }   
             
