@@ -1,4 +1,6 @@
-<?php
+}
+    
+    <?php
 // Autor: Rafae Perez
 // comment: class data model that provides functionality for operations with Mysql databases 
 
@@ -6,128 +8,208 @@ class model
 {
         private $_registry;	
         protected $_db;
+        
+        private $_data = array();
+        private $_rows = array(); 
+        
         private $_table;
         private $_fields;       
-        
+        private $_values;
         private $_where;
         private $_opt;
         
-        public function __construct($name )
+        
+        private $_rowTable;//total de registros de la tabla
+        private $_rowSql; // numero de registro que debolvera la consulta
+        private $_numPag; //numero de paginas para el total de registro de la tabla 
+        private $_rowPag; //registros por pagina 
+        
+        
+        
+        public function __construct()
         {
-            $this->setTable( $name); 
+            $this->_rowTable = 0;
+            $this->_rowPag = 15;
+            $this->_rowSql = 100;
+            $this->_numPag = 10;
+            
+            
+            
+            $this->_table = get_class($this); 
+            
             $this->_registry = registry::getInstancia();
+            
             $this->_db = $this->_registry->_db;	
+            
+            
+            
             
             //mapping of fields
             $this->mapFields();
+            $this->countRowTable();
             
         }
+        
+        public function getValue($index)
+        {
+            if($index)
+            {
+                if(in_array($index, $this->_rows))
+                {
+                    return $this->_rows[$index];
+                }else
+                {
+                    $clave=array_search($index,$this->_data);
+                    if($clave> 0)
+                    {
+                        foreach ($this->_fields as $value)
+                        {
+                            $this->_rows[$value] = $this->_data[$clave][$value];
+                        }
+                        return $this->_rows[$index]; 
+
+                    }
+                }
+            }
+            
+        }
+        public function setValue($index,$value)
+        {
+            
+            
+        }
+        
         //-------------------------------------------------------------------------------------------------------------------------------------------------------
         //Autor:Rafael Perez
         //Comment: method that maps data structure
         private function mapFields()
         {        
-                $sql = "select * from ".$this->_table." limit 1";
-                $res = $this->_db->query($sql);
-                if($res)
-                {    
-                    $res->setFetchMode(PDO::FETCH_ASSOC);       
-                   $data = $res->fetch();
-                   $fields = array_keys($data);                   
-                    $this->setFields( $fields);
-                    return true;
-                }else
-                {
-                    $this->regLog();
-                    return false;
-                }
-     
-                        
-        }
-        
-        public function setFields($value)
-        {
-            $this->_fields = $value;
-        }
-        public function setWhere($value)
-        {
-            $this->_where = $value;
-        }
-        public function setTable($value)
-        {
-            $this->_table = $value;
-        }
-        public function setOpt($value)
-        {
-            $this->_opt = $value;
-        }
-        
-        
-        
-        
-      //Method that generates query to database  
-        public function sQuerySelect()
-        {
-            $oper = func_num_args();
-            switch ($oper)
-            {
-                case 1:
-                        list($field) = func_get_args();
-                    break;
-                case 2:
-                        list($field,$where) = func_get_args();
-                    break;
-                case 3:
-                        list($field,$where,$opt) = func_get_args();
-                    break;
-                case 4:
-                        list($field,$where,$opt,$table) = func_get_args();
-                    break;
-                default :
-                    $field = " * ";
-                
-            }
-            
-            if(isset($table) && strlen($table)>3)
-                $this->setTable ($table);
-            else
-                $this->setTable ($this->_name);
-
-            if(isset($where) && strlen($where)>3)
-                $this->setWhere ($where);
-
-            if(isset($opt) && strlen($opt)>3)
-                $this->setOpt($opt);
-
-            if(isset($field))
-                $this->setSelect($field);
-            
-            if($oper == 1)
-            {
-                 $sql = "select " . $this->_fields .
-                            "  from " . $this->_table ;
-            }    
-           if($oper == 2)         
-           {
-                 $sql = "select  " . $this->_fields .
-                            "  from " . $this->_table .
-                            " where " . $this->_where;               
-           }         
-           
-           if($oper == 3)
-           {
-                $sql = "select  " . $this->_fields .
-                            "  from " . $this->_table .
-                            " where " . $this->_where.
-                            " " . $this->_opt;   
-               
-           }    
-      
+            $sql = "select * from ".$this->_table." limit " . $this->_rowSql;
             $res = $this->_db->query($sql);
             if($res)
             {    
                 $res->setFetchMode(PDO::FETCH_ASSOC);       
-                return $res->fetch();
+                $this->_data = $res->fetchAll();
+                $this->_fields = array_keys($data);
+                        
+                return true;
+            }else
+            {
+                $this->regLog();
+                return false;
+            }
+     
+                        
+        }
+        //-------------------------------------------------------------------------------------------------------------------------------------------------------
+        //Autor:Rafael Perez
+        //Comment: method that count data the table
+        private function countRowTable()
+        {
+            $sql = "select count(*)as rows from ".$this->_table ;
+            $res = $this->_db->query($sql);
+            if($res)
+            {    
+                $res->setFetchMode(PDO::FETCH_ASSOC);       
+                $data = $res->fetch();
+                $this->_rowTable = $data['rows'];
+                
+            }else
+                $this->_rowTable = 0 ;
+        }
+        
+        
+        public function getRow($val) 
+        {
+            if($val)
+            {
+                if(count($this->_rows)>0)
+                {
+                    if(array_search($val, $this->_rows))
+                    {
+                        return $this->_rows;
+                    }else
+                    {
+                        $clave=array_search($val,$this->_data);
+                        if($clave> 0)
+                        {
+                            foreach ($this->_fields as $value)
+                            {
+                                $this->_rows[$value] = $this->_data[$clave][$value];
+                            }
+                            return $this->_rows; 
+                            
+                        }else
+                        {
+                            $this->mapFields();
+                            foreach ($this->_fields as $value)
+                            {
+                                $this->_rows[$value] = $this->_data[$clave][$value];
+                            }
+                            return $this->_rows;
+                            
+                        }
+                    }
+                    
+                }else
+                {
+                    $this->mapFields();
+                    foreach ($this->_fields as $value)
+                    {
+                        $this->_rows[$value] = $this->_data[$clave][$value];
+                    }
+                    return $this->_rows;
+                }
+                
+                
+            }
+            return FALSE;
+            
+            
+        }
+        
+        
+        
+        
+        //------------------------------------------------------------------------------------------------------------------------
+               
+        
+        //Method that generates query simple to database  
+        public function sQuery()
+        {
+            $oper = func_num_args();
+            
+            switch ($oper)
+            {
+                case 1:
+                    list($param) = func_get_args();
+                    $fields = $param['fields'];
+                    $cond   = $param['cond'];
+                    $sql = "select  " . $fields .
+                            "  from " . $this->_table .
+                            " where " . $cond;
+                    
+                    break;
+                case 2:
+                    list($param,$additional) = func_get_args();
+                    $fields = $param['fields'];
+                    $cond   = $param['cond'];
+                    $sql = "select  " . $fields .
+                            "  from " . $this->_table .
+                            " where " . $cond .
+                            " limit " . $additional;              
+                    
+                    break;
+                default :
+                    
+                
+            }
+             
+            $res = $this->_db->query($sql);
+            if($res)
+            {    
+                $res->setFetchMode(PDO::FETCH_ASSOC);       
+                return $res->fetchAll();
             }else
             {
                 $this->regLog();
@@ -138,11 +220,11 @@ class model
         }
            
         
-         //-------------------------------------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------------------------------------
         //Autor:Rafael Perez
         //Comment: method that generates insertion query
         //parameters: array(":index"->value,........) or array("index"->value)
-        public function sQueryInsert(array $values)
+        public function sInsert(array $values)
         {
                 if(count($this->_fields)>0)
                 {
@@ -179,6 +261,13 @@ class model
                     }
                     
                 }   
+            
+            
+            
+        }
+        
+        public function sQueryUpdate()
+        {
             
             
             
