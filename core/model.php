@@ -49,7 +49,7 @@ class model
             $this->countRowTable();
             
         }
-        
+        //method what return value, search in array $this->_rows
         public function getValue($index)
         {
             if($index)
@@ -57,22 +57,14 @@ class model
                 if(in_array($index, $this->_rows))
                 {
                     return $this->_rows[$index];
-                }else
-                {
-                    $clave=array_search($index,$this->_data);
-                    if($clave> 0)
-                    {
-                        foreach ($this->_fields as $value)
-                        {
-                            $this->_rows[$value] = $this->_data[$clave][$value];
-                        }
-                        return $this->_rows[$index]; 
-
-                    }
                 }
             }
+            return false;
             
         }
+        
+        
+        
         public function setValue($index,$value)
         {
             
@@ -89,9 +81,16 @@ class model
             if($res)
             {    
                 $res->setFetchMode(PDO::FETCH_ASSOC);       
-                $this->_data = $res->fetchAll();
+                //$this->_data = $res->fetchAll();
+                $data = $res->fetchAll();
                 $this->_fields = array_keys($data);
-                        
+                
+                $i=0;
+                foreach ($data as $arr)
+                {
+                   $val['row'][$i] = $arr;                    
+                }
+                                       
                 return true;
             }else
             {
@@ -118,53 +117,23 @@ class model
                 $this->_rowTable = 0 ;
         }
         
-        
-        public function getRow($val) 
+        //------------------------------------------------------------------------------------------------------------------------
+        //metho that return the row of data
+        //------------------------------------------------------------------------------------------------------------------------
+        public function getRow($idRow) 
         {
-            if($val)
+            if($idRow)
             {
-                if(count($this->_rows)>0)
+                
+                for($i=0;$i < count($this->_data);$i++)
                 {
-                    if(array_search($val, $this->_rows))
-                    {
-                        return $this->_rows;
-                    }else
-                    {
-                        $clave=array_search($val,$this->_data);
-                        if($clave> 0)
-                        {
-                            foreach ($this->_fields as $value)
-                            {
-                                $this->_rows[$value] = $this->_data[$clave][$value];
-                            }
-                            return $this->_rows; 
-                            
-                        }else
-                        {
-                            $this->mapFields();
-                            foreach ($this->_fields as $value)
-                            {
-                                $this->_rows[$value] = $this->_data[$clave][$value];
-                            }
-                            return $this->_rows;
-                            
-                        }
-                    }
-                    
-                }else
-                {
-                    $this->mapFields();
-                    foreach ($this->_fields as $value)
-                    {
-                        $this->_rows[$value] = $this->_data[$clave][$value];
-                    }
-                    return $this->_rows;
+                    if($this->_data['row'][$i]=$idRow)
+                        $this->_rows = $this->_data['row'][$i];
                 }
-                
-                
+                return $this->_rows; 
+
             }
             return FALSE;
-            
             
         }
         
@@ -172,8 +141,7 @@ class model
         
         
         //------------------------------------------------------------------------------------------------------------------------
-               
-        
+        //
         //Method that generates query simple to database  
         public function sQuery()
         {
@@ -209,7 +177,13 @@ class model
             if($res)
             {    
                 $res->setFetchMode(PDO::FETCH_ASSOC);       
-                return $res->fetchAll();
+                $data = $res->fetchAll();
+                $i=0;
+                foreach ($data as $arr)
+                {
+                   $val['row'][$i] = $arr;                    
+                }
+                return $val;
             }else
             {
                 $this->regLog();
@@ -265,10 +239,39 @@ class model
             
             
         }
-        
-        public function sQueryUpdate()
+        //method that update field form table 
+        public function sQueryUpdate(array $values,$id)
         {
-            
+            if($values)
+            {
+                
+                    if(count($values) != count($this->_fields) ) 
+                    {
+                            $fields = array();
+                            foreach($values as $k => $v )
+                            {
+                               if(strpos(":", $v)) 
+                                    $index = str_replace(":","",$k);
+                               else
+                                   $index = $k;
+                                    $fields[] = $index ." = ".$v;
+                            }
+                            $prep = $values;
+                            $this->_db->prepare("update ".$this->_table." set " . implode(', ',$fields) . " where id_".$this->_table = $id );
+                    }                   
+                    
+                    $res = $sth->execute($prep);
+                    if(!$res)
+                    {
+                        $this->regLog();
+                        return FALSE;
+                    } else {
+                            return true;
+                    }
+                    
+                
+                
+            }
             
             
         }
