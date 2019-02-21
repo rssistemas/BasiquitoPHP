@@ -1,7 +1,7 @@
 }
     
     <?php
-// Autor: Rafae Perez
+// Autor: Rafael Perez
 // comment: class data model that provides functionality for operations with Mysql databases 
 
 class model
@@ -136,13 +136,10 @@ class model
             return FALSE;
             
         }
-        
-        
-        
-        
+
         //------------------------------------------------------------------------------------------------------------------------
-        //
         //Method that generates query simple to database  
+        //------------------------------------------------------------------------------------------------------------------------
         public function sQuery()
         {
             $oper = func_num_args();
@@ -240,7 +237,7 @@ class model
             
         }
         //method that update field form table 
-        public function sQueryUpdate(array $values,$id)
+        public function sUpdate(array $values,$id)
         {
             if($values)
             {

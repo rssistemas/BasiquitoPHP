@@ -1,6 +1,9 @@
 <?php
 class error
 {
+    
+    
+    
     public static function alerta($codigo,$url)
     {
         header("location:". BASE_URL ."error/alerta/".$codigo.'/'.$url ); 
