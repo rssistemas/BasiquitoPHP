@@ -30,7 +30,7 @@
 				
 				}else
 					{
-						throw new Exception("Error de base de Modulo");
+						throw new error("Error de base de Modulo, Laruta del modulo no existe");
 					}
 				
 			}else
@@ -68,7 +68,7 @@
 			  
 			}else
 			{
-                            throw new Exception('Controlador No encontrado'. $rutaControlador);
+                            throw new error('Controlador No encontrado'. $rutaControlador);
 			}
 				
 		}

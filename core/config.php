@@ -21,6 +21,8 @@
         //define tiempo de vida de session
         define('SESSION_TIME',$general['general']['sessionTime']);
 
+        define('DEFAULT_ERROR', $general['general']['nivelError']);
+
         //define llave para incriptacion
         define('HASH_KEY','525f7321c0e5a');
 

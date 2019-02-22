@@ -58,7 +58,7 @@ abstract class controller
                         return $modelo;// retornamos el objeto intanciado
 
                 }else 
-                        throw new Exception('Modelo no encontrado');
+                        throw new error('Modelo no encontrado');
         }
 
         //---------------------------------------------------------
@@ -73,7 +73,7 @@ abstract class controller
                         require_once $ruta_libreria;
 
                 }else
-                        throw new Exception('Libreria no encontrada');
+                        throw new error('Libreria no encontrada');
 
         }
 

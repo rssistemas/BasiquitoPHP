@@ -126,7 +126,7 @@ class session
 
                 if(!array_key_exists($level, $role))
                 {
-                        throw new Exception("Error de Acceso...");
+                        throw new error("Error de Acceso... Nivel de acceso no definido");
                 }else
                         return $role[$level];
 
@@ -199,7 +199,7 @@ class session
         {
                 if(!session::get('tiempo') || !defined('SESSION_TIME'))
                 {
-                        throw new Exception("No se ha definido el tiempo de la session ....");
+                        throw new error("No se ha definido el tiempo de la session ....");
                 }
                 if(SESSION_TIME == 0)
                         return;

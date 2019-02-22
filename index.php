@@ -1,7 +1,7 @@
 <?php
-
         ini_set('display_errors', 1);
-        error_reporting(E_ALL);
+        error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+        
 
         // define el separador de directorio
         define('DS', DIRECTORY_SEPARATOR);
@@ -24,6 +24,7 @@
         define('CONF_PATH',APP_PATH . 'config' . DS);
 
         try{
+            require_once CORE_PATH . 'error.php' ;
             require_once CORE_PATH . 'config.php' ;			
             require_once CORE_PATH . 'autoload.php' ;
             require_once CORE_PATH . 'Hash.php';

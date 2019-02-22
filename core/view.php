@@ -206,7 +206,7 @@ class view
 
                 }else
                         {
-                                throw new Exception('Js no encontrado');
+                                throw new error('Archivo Js no encontrado');
                         }
         }
 		
@@ -225,7 +225,7 @@ class view
 
                 }else
                         {
-                                throw new Exception('css no encontrado');
+                                throw new error('Archivo css no encontrado');
                         }
         }
 		
@@ -243,7 +243,7 @@ class view
                         }
                 }else
                         {
-                                throw new Exception("Error de js plugin");
+                                throw new error("Error de js plugin");
                         }
 
         }
@@ -260,7 +260,7 @@ class view
                         }
                 }else
                         {
-                                throw new Exception("Error de js plugin");
+                                throw new error("Error cargando CSS desde carpeta publica");
                         }
 
         }
